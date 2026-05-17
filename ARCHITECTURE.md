@@ -168,24 +168,6 @@ erDiagram
     GOAL ||--o{ AUDITLOG : "audited under"
 ```
 
----
-
-## 🏆 Unstop Submission Copy-Paste Template
-
-> [!TIP]
-> Copy the contents below and compile it directly into a PDF/DOCX (or paste into your submission file) to create an extremely professional project delivery package for the Atomberg Hackathon judges!
-
-***
-
-# Project Submission: GoalAlign — Atomberg Goal Tracking Portal
-
-## 🔗 Live Application Link
-👉 **[GoalAlign Live Production Web Portal](https://atomberg-hackathon-vo5y08ai0-vishwassachan684-arts-projects.vercel.app)**
-
-## 💻 Source Code Repository
-👉 **[GoalAlign GitHub Code Repository](https://github.com/vishwassachan684-art/Atomberg-Hackathon)** *(Contains complete deployment pipeline config, Prisma schema, and customized styling engine)*
-
----
 
 ## 🔑 Judge Login Credentials
 To help review the application end-to-end, copy-pasteable judge accounts are available directly inside the secure login terminal:
