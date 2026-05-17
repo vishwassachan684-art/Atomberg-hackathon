@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import { computeProgressScore, getProgressColor, getProgressLabel, getUomLabel, type Goal, type CheckIn, type ProgressStatus, mockUsers } from '@/lib/mockData';
 import { getGoals, getCheckIns, saveCheckIn } from '@/app/actions';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 const quarters = [
   { key: 'Q1', label: 'Q1 Check-in', window: 'July 2026', active: true },
@@ -13,26 +15,36 @@ const quarters = [
 ] as const;
 
 export default function CheckInsPage() {
+  const router = useRouter();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() { router.push('/login'); }
+  });
+
   const [goals, setGoals] = useState<Goal[]>([]);
   const [checkIns, setCheckIns] = useState<CheckIn[]>([]);
   const [activeQuarter, setActiveQuarter] = useState<string>('Q1');
+  const [loadingData, setLoadingData] = useState(true);
   
   const [achievements, setAchievements] = useState<Record<string, string>>({});
   const [statuses, setStatuses] = useState<Record<string, ProgressStatus>>({});
   const [feedback, setFeedback] = useState<string | null>(null);
 
-  const currentUser = mockUsers[0];
-  const userGoals = goals.filter((g) => g.userId === currentUser.id && (g.status === 'locked' || g.status === 'approved'));
+  const currentUser = session?.user;
+  const userGoals = goals.filter((g) => g.userId === currentUser?.id && (g.status === 'locked' || g.status === 'approved'));
 
   useEffect(() => {
-    async function loadData() {
-      const goalsData = await getGoals();
-      const checkinsData = await getCheckIns();
-      setGoals(goalsData);
-      setCheckIns(checkinsData);
+    if (status === 'authenticated') {
+      async function loadData() {
+        const goalsData = await getGoals();
+        const checkinsData = await getCheckIns();
+        setGoals(goalsData);
+        setCheckIns(checkinsData);
+        setLoadingData(false);
+      }
+      loadData();
     }
-    loadData();
-  }, []);
+  }, [status]);
 
   // Sync inputs when quarter, goals, or check-ins change
   useEffect(() => {
@@ -51,6 +63,7 @@ export default function CheckInsPage() {
   }, [activeQuarter, goals, checkIns]);
 
   const handleSave = async (status: 'draft' | 'submitted') => {
+    if (!currentUser) return;
     for (const g of userGoals) {
       const valStr = achievements[g.id];
       const valNum = valStr !== undefined && valStr !== '' ? Number(valStr) : 0;
@@ -73,6 +86,14 @@ export default function CheckInsPage() {
     setFeedback(`Check-in ${status === 'submitted' ? 'submitted' : 'draft saved'} successfully!`);
     setTimeout(() => setFeedback(null), 3000);
   };
+
+  if (status === 'loading' || loadingData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-12 h-12 rounded-full border-4 border-surface-container border-t-secondary animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">

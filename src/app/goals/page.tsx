@@ -2,25 +2,45 @@
 
 import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
-import { mockUsers, computeProgressScore, getStatusColor, getStatusLabel, getProgressColor, getProgressLabel, getUomLabel, type Goal, type CheckIn } from '@/lib/mockData';
+import { computeProgressScore, getStatusColor, getStatusLabel, getProgressColor, getProgressLabel, getUomLabel, type Goal, type CheckIn } from '@/lib/mockData';
 import { getGoals, getCheckIns } from '@/app/actions';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function MyGoalsPage() {
+  const router = useRouter();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() { router.push('/login'); }
+  });
+
   const [goals, setGoals] = useState<Goal[]>([]);
   const [checkIns, setCheckIns] = useState<CheckIn[]>([]);
+  const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {
-    async function loadData() {
-      const goalsData = await getGoals();
-      const checkinsData = await getCheckIns();
-      setGoals(goalsData);
-      setCheckIns(checkinsData);
+    if (status === 'authenticated') {
+      async function loadData() {
+        const goalsData = await getGoals();
+        const checkinsData = await getCheckIns();
+        setGoals(goalsData);
+        setCheckIns(checkinsData);
+        setLoadingData(false);
+      }
+      loadData();
     }
-    loadData();
-  }, []);
+  }, [status]);
 
-  const currentUser = mockUsers[0];
-  const userGoals = goals.filter((g) => g.userId === currentUser.id);
+  if (status === 'loading' || loadingData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-12 h-12 rounded-full border-4 border-surface-container border-t-secondary animate-spin" />
+      </div>
+    );
+  }
+
+  const currentUser = session?.user;
+  const userGoals = goals.filter((g) => g.userId === currentUser?.id);
   const totalWeightage = userGoals.reduce((s, g) => s + g.weightage, 0);
 
   return (

@@ -2,31 +2,49 @@
 
 import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
-import { mockUsers, getStatusColor, getStatusLabel, getUomLabel, type Goal, type GoalStatus } from '@/lib/mockData';
-import { getGoals, updateGoalStatus, batchUpdateGoalStatus } from '@/app/actions';
+import { mockUsers, getStatusColor, getStatusLabel, getUomLabel, type Goal, type GoalStatus, type User } from '@/lib/mockData';
+import { getGoals, getUsers, updateGoalStatus, batchUpdateGoalStatus } from '@/app/actions';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function ManagerApprovalsPage() {
+  const router = useRouter();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() { router.push('/login'); }
+  });
+
   const [goals, setGoals] = useState<Goal[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved'>('all');
   const [expandedEmployee, setExpandedEmployee] = useState<string | null>(null);
   const [actionFeedback, setActionFeedback] = useState<{ goalId: string; action: string } | null>(null);
+  const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {
-    async function loadData() {
-      const activeGoals = await getGoals();
-      setGoals(activeGoals);
+    if (status === 'authenticated') {
+      async function loadData() {
+        const activeGoals = await getGoals();
+        const activeUsers = await getUsers();
+        setGoals(activeGoals);
+        setUsers(activeUsers);
+        setLoadingData(false);
+      }
+      loadData();
     }
-    loadData();
+  }, [status]);
 
-    // Set default expanded employee to Arjun Mehta
-    const arjun = mockUsers.find((u) => u.name === 'Arjun Mehta');
+  useEffect(() => {
+    const activeUsersList = users.length > 0 ? users : mockUsers;
+    const arjun = activeUsersList.find((u) => u.name === 'Arjun Mehta');
     if (arjun) {
       setExpandedEmployee(arjun.id);
     }
-  }, []);
+  }, [users]);
 
-  const managerUser = mockUsers[3]; // Neha Gupta - Manager
-  const teamMembers = mockUsers.filter((u) => u.managerId === managerUser.id);
+  const managerUser = session?.user;
+  const activeUsersList = users.length > 0 ? users : mockUsers;
+  const teamMembers = activeUsersList.filter((u) => u.managerId === managerUser?.id);
   const teamGoals = goals.filter((g) => teamMembers.some((m) => m.id === g.userId));
 
   // Group goals by employee
@@ -40,7 +58,7 @@ export default function ManagerApprovalsPage() {
 
   const handleAction = async (goalId: string, action: 'approve' | 'reject') => {
     const newStatus: GoalStatus = action === 'approve' ? 'approved' : 'rejected';
-    await updateGoalStatus(goalId, newStatus, 'neha@company.com');
+    await updateGoalStatus(goalId, newStatus, managerUser?.email || 'neha@company.com');
     
     const activeGoals = await getGoals();
     setGoals(activeGoals);
@@ -58,9 +76,17 @@ export default function ManagerApprovalsPage() {
     }),
   })).filter((group) => group.goals.length > 0);
 
+  if (status === 'loading' || loadingData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-12 h-12 rounded-full border-4 border-surface-container border-t-secondary animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
-      <Sidebar currentPath="/manager/approvals" userRole="manager" userName={managerUser.name} />
+      <Sidebar currentPath="/manager/approvals" userRole="manager" userName={managerUser?.name || 'Manager'} />
       <main className="flex-1 lg:ml-64 pt-14 lg:pt-0">
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-10 py-6 lg:py-10">
           {/* Header */}
@@ -234,7 +260,7 @@ export default function ManagerApprovalsPage() {
                             type="button" 
                             onClick={async () => {
                               const pendingIds = goals.filter((g) => g.userId === member.id && (g.status === 'pending_approval' || g.status === 'locked')).map((g) => g.id);
-                              await batchUpdateGoalStatus(pendingIds, 'rejected', 'neha@company.com');
+                              await batchUpdateGoalStatus(pendingIds, 'rejected', managerUser?.email || 'neha@company.com');
                               const activeGoals = await getGoals();
                               setGoals(activeGoals);
                               setActionFeedback({ goalId: 'bulk', action: 'returned for rework' });
@@ -250,7 +276,7 @@ export default function ManagerApprovalsPage() {
                             disabled={isWeightInvalid}
                             onClick={async () => {
                               const pendingIds = goals.filter((g) => g.userId === member.id && (g.status === 'pending_approval' || g.status === 'locked')).map((g) => g.id);
-                              await batchUpdateGoalStatus(pendingIds, 'approved', 'neha@company.com');
+                              await batchUpdateGoalStatus(pendingIds, 'approved', managerUser?.email || 'neha@company.com');
                               const activeGoals = await getGoals();
                               setGoals(activeGoals);
                               setActionFeedback({ goalId: 'bulk', action: 'approved' });

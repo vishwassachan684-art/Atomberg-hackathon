@@ -1,38 +1,67 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
-import { mockUsers, mockGoals } from '@/lib/mockData';
-
-const adminUser = mockUsers[4]; // Vikram Singh - Admin
+import { mockUsers, mockGoals, type User, type Goal } from '@/lib/mockData';
+import { getAuditLogs, getGoals, getUsers } from '@/app/actions';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 const cycles = [
   { id: 'cy1', name: 'FY 2026-27', status: 'active', goalSettingOpen: '2026-05-01', q1: 'Jul 2026', q2: 'Oct 2026', q3: 'Jan 2027', q4: 'Mar 2027' },
   { id: 'cy2', name: 'FY 2025-26', status: 'closed', goalSettingOpen: '2025-05-01', q1: 'Jul 2025', q2: 'Oct 2025', q3: 'Jan 2026', q4: 'Mar 2026' },
 ];
 
-const auditLogs = [
-  { id: 'a1', user: 'Vikram Singh', action: 'Unlocked goal "API Response Time" for Arjun Mehta', timestamp: '2026-05-15 14:32', type: 'unlock' },
-  { id: 'a2', user: 'Neha Gupta', action: 'Approved all goals for Arjun Mehta', timestamp: '2026-05-05 10:15', type: 'approve' },
-  { id: 'a3', user: 'Vikram Singh', action: 'Opened FY 2026-27 goal setting cycle', timestamp: '2026-05-01 09:00', type: 'cycle' },
-  { id: 'a4', user: 'Neha Gupta', action: 'Returned goal "Sales Pipeline" to Priya Sharma for rework', timestamp: '2026-05-12 16:45', type: 'reject' },
-  { id: 'a5', user: 'Vikram Singh', action: 'Pushed shared goal "Zero Safety Incidents" to Engineering', timestamp: '2026-05-03 11:20', type: 'shared' },
-];
-
-const employees = mockUsers.filter((u) => u.role === 'employee');
-const completionData = employees.map((e) => {
-  const goals = mockGoals.filter((g) => g.userId === e.id);
-  const submitted = goals.length > 0;
-  const approved = goals.every((g) => g.status === 'approved' || g.status === 'locked');
-  return { ...e, goalCount: goals.length, submitted, approved };
-});
-
 export default function AdminCyclesPage() {
+  const router = useRouter();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() { router.push('/login'); }
+  });
+
+  const [auditLogs, setAuditLogs] = useState<any[]>([]);
+  const [goals, setGoals] = useState<Goal[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loadingData, setLoadingData] = useState(true);
   const [tab, setTab] = useState<'cycles' | 'audit' | 'completion'>('cycles');
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      async function loadData() {
+        const logsData = await getAuditLogs();
+        const goalsData = await getGoals();
+        const usersData = await getUsers();
+        setAuditLogs(logsData);
+        setGoals(goalsData);
+        setUsers(usersData);
+        setLoadingData(false);
+      }
+      loadData();
+    }
+  }, [status]);
+
+  const adminUser = session?.user;
+
+  const activeUsersList = users.length > 0 ? users : mockUsers;
+  const employees = activeUsersList.filter((u) => u.role === 'employee');
+  const completionData = employees.map((e) => {
+    const userGoals = goals.filter((g) => g.userId === e.id);
+    const submitted = userGoals.length > 0;
+    const approved = userGoals.length > 0 && userGoals.every((g) => g.status === 'approved' || g.status === 'locked');
+    return { ...e, goalCount: userGoals.length, submitted, approved };
+  });
+
+  if (status === 'loading' || loadingData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-12 h-12 rounded-full border-4 border-surface-container border-t-secondary animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
-      <Sidebar currentPath="/admin/cycles" userRole="admin" userName={adminUser.name} />
+      <Sidebar currentPath="/admin/cycles" userRole="admin" userName={adminUser?.name || 'Admin'} />
       <main className="flex-1 lg:ml-64 pt-14 lg:pt-0">
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-10 py-6 lg:py-10">
           <div className="mb-8 animate-fade-in">
@@ -109,23 +138,27 @@ export default function AdminCyclesPage() {
               </h2>
               <div className="space-y-0 divide-y divide-outline-variant/40">
                 {auditLogs.map((log) => {
-                  const iconMap: Record<string, { icon: string; color: string }> = {
-                    unlock: { icon: 'lock_open', color: '#b45309' },
-                    approve: { icon: 'check_circle', color: '#15803d' },
-                    cycle: { icon: 'event_repeat', color: '#0ea5e9' },
-                    reject: { icon: 'undo', color: '#c2410c' },
-                    shared: { icon: 'share', color: '#8b5cf6' },
+                  const getLogType = (actionStr: string) => {
+                    const act = actionStr.toLowerCase();
+                    if (act.includes('unlock')) return { icon: 'lock_open', color: '#b45309' };
+                    if (act.includes('approve') || act.includes('approved')) return { icon: 'check_circle', color: '#15803d' };
+                    if (act.includes('reject') || act.includes('rework') || act.includes('returned')) return { icon: 'undo', color: '#c2410c' };
+                    if (act.includes('cycle') || act.includes('open')) return { icon: 'event_repeat', color: '#0ea5e9' };
+                    if (act.includes('share') || act.includes('shared')) return { icon: 'share', color: '#8b5cf6' };
+                    return { icon: 'info', color: '#64748b' };
                   };
-                  const { icon, color } = iconMap[log.type] || { icon: 'info', color: '#64748b' };
+                  const { icon, color } = getLogType(log.action);
                   return (
                     <div key={log.id} className="flex gap-3 py-4">
                       <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: `${color}15` }}>
                         <span className="material-symbols-outlined" style={{ fontSize: '18px', color }}>{icon}</span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-body-md text-on-surface">{log.action}</p>
+                        <p className="text-body-md text-on-surface">
+                          {log.action} {log.details && <span className="text-body-sm text-on-surface-variant font-normal">— {log.details}</span>}
+                        </p>
                         <p className="text-body-sm text-on-surface-variant mt-0.5">
-                          By {log.user} · {log.timestamp}
+                          By {log.userName} · {log.createdAt}
                         </p>
                       </div>
                     </div>
