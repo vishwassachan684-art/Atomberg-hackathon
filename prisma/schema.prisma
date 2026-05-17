@@ -1,0 +1,72 @@
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id         String   @id @default(cuid())
+  name       String
+  email      String   @unique
+  password   String   @default("password123")
+  role       String   @default("employee")
+  department String   @default("General")
+  managerId  String?
+  manager    User?    @relation("ManagerReports", fields: [managerId], references: [id])
+  reports    User[]   @relation("ManagerReports")
+  goals      Goal[]
+  checkIns   CheckIn[]
+  auditLogs  AuditLog[]
+  createdAt  DateTime @default(now())
+}
+
+model Goal {
+  id             String    @id @default(cuid())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id])
+  title          String
+  description    String    @default("")
+  thrustArea     String
+  uom            String
+  target         Float
+  weightage      Float
+  status         String    @default("draft")
+  progressStatus String    @default("not_started")
+  isShared       Boolean   @default(false)
+  sharedFromId   String?
+  checkIns       CheckIn[]
+  auditLogs      AuditLog[]
+  createdAt      DateTime  @default(now())
+  approvedAt     DateTime?
+  updatedAt      DateTime  @updatedAt
+}
+
+model CheckIn {
+  id                String   @id @default(cuid())
+  goalId            String
+  goal              Goal     @relation(fields: [goalId], references: [id])
+  userId            String
+  user              User     @relation(fields: [userId], references: [id])
+  quarter           String
+  actualAchievement Float    @default(0)
+  progressStatus    String   @default("not_started")
+  managerComment    String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([goalId, quarter])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  goalId    String?
+  goal      Goal?    @relation(fields: [goalId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  action    String
+  details   String
+  createdAt DateTime @default(now())
+}

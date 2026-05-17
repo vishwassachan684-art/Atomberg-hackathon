@@ -1,0 +1,91 @@
+version: "2"
+type: backend
+tech_stack:
+  - TypeScript
+  - Next.js (App Router)
+  - Prisma
+  - SQLite (better-sqlite3)
+features:
+  - name: Goal Management
+    description: Server actions handling creation, retrieval, and status updates of performance goals.
+    files:
+      - src/app/actions.ts
+      - src/lib/db.ts
+    endpoints:
+      - method: POST
+        path: /api/actions/getGoals
+        description: Retrieve all active goals from the SQLite database
+        auth_required: false
+        response_schema:
+          "200": Goal[]
+      - method: POST
+        path: /api/actions/createGoal
+        description: Insert a new goal record into the database and log the creation
+        auth_required: true
+        request_schema:
+          body:
+            userId: string
+            title: string
+            description: string
+            thrustArea: string
+            kpis: object[]
+        response_schema:
+          "200": Goal
+      - method: POST
+        path: /api/actions/updateGoalStatus
+        description: Update goal status and automatically log approval/rejection logic
+        auth_required: true
+        request_schema:
+          body:
+            goalId: string
+            status: string
+            managerEmail: string
+        response_schema:
+          "200": object
+      - method: POST
+        path: /api/actions/batchUpdateGoalStatus
+        description: Bulk update multiple goal statuses at once
+        auth_required: true
+        request_schema:
+          body:
+            goalIds: string[]
+            status: string
+            managerEmail: string
+        response_schema:
+          "200": object
+  - name: Check-in Management
+    description: Server actions for saving quarterly check-in achievements.
+    files:
+      - src/app/actions.ts
+    endpoints:
+      - method: POST
+        path: /api/actions/getCheckIns
+        description: Retrieve all check-ins
+        auth_required: false
+        response_schema:
+          "200": CheckIn[]
+      - method: POST
+        path: /api/actions/saveCheckIn
+        description: Upsert a check-in and log the action
+        auth_required: true
+        request_schema:
+          body:
+            goalId: string
+            quarter: number
+            actualAchievement: number
+            managerFeedback: string
+            employeeEmail: string
+        response_schema:
+          "200": CheckIn
+  - name: Audit Logs
+    description: Retrieve system-wide action history.
+    files:
+      - src/app/actions.ts
+    endpoints:
+      - method: POST
+        path: /api/actions/getAuditLogs
+        description: Fetch the audit log records joined with users and goals
+        auth_required: false
+        response_schema:
+          "200": AuditLog[]
+known_limitations: []

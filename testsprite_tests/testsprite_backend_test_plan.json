@@ -1,0 +1,52 @@
+[
+  {
+    "id": "TC001",
+    "title": "post api actions getgoals returns active goals",
+    "description": "Verify that POST /api/actions/getGoals returns a 200 status with an array of active goals and that the goals are correctly displayed for user review."
+  },
+  {
+    "id": "TC002",
+    "title": "post api actions creategoal creates new goal with valid data",
+    "description": "Test POST /api/actions/createGoal with valid authenticated payload including userId, title, description, thrustArea, and kpis results in 200 response with created Goal, and the goal is persisted in SQLite and retrievable via getGoals."
+  },
+  {
+    "id": "TC003",
+    "title": "post api actions creategoal rejects invalid or unauthenticated requests",
+    "description": "Ensure POST /api/actions/createGoal with missing or invalid authentication returns a 4xx error and no goal is created in the database."
+  },
+  {
+    "id": "TC004",
+    "title": "post api actions updategoalstatus updates status with valid data",
+    "description": "Validate that POST /api/actions/updateGoalStatus with valid goalId, status, and managerEmail returns 200 with updated status object, changes the goal status, and logs approval or rejection correctly."
+  },
+  {
+    "id": "TC005",
+    "title": "post api actions updategoalstatus rejects invalid or unauthorized requests",
+    "description": "Confirm that POST /api/actions/updateGoalStatus with invalid goalId or unauthorized request returns an error response and the goal status remains unchanged."
+  },
+  {
+    "id": "TC006",
+    "title": "post api actions batchupdategoalstatus bulk updates multiple goals",
+    "description": "Test POST /api/actions/batchUpdateGoalStatus with multiple valid goalIds and status returns 200 with bulk update result and all matching goals are updated accordingly."
+  },
+  {
+    "id": "TC007",
+    "title": "post api actions batchupdategoalstatus handles invalid goalids appropriately",
+    "description": "Verify POST /api/actions/batchUpdateGoalStatus with one or more invalid goalIds returns an error or partial failure response and only valid updates are applied or the entire batch is rejected based on validation logic."
+  },
+  {
+    "id": "TC008",
+    "title": "post api actions getcheckins retrieves all checkins",
+    "description": "Check that POST /api/actions/getCheckIns returns 200 with an array of all saved check-ins for review."
+  },
+  {
+    "id": "TC009",
+    "title": "post api actions savecheckin upserts checkin with valid data",
+    "description": "Ensure POST /api/actions/saveCheckIn with valid goalId, quarter, actualAchievement, managerFeedback, and employeeEmail returns 200 with saved CheckIn and persists or updates the record correctly."
+  },
+  {
+    "id": "TC010",
+    "title": "post api actions savecheckin rejects invalid or unauthorized requests",
+    "description": "Confirm POST /api/actions/saveCheckIn with invalid goalId, malformed achievement data, missing employeeEmail, or unauthorized request returns an error and no check-in is saved or updated."
+  }
+]

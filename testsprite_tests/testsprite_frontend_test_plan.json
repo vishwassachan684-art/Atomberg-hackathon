@@ -1,0 +1,635 @@
+[
+  {
+    "id": "TC001",
+    "title": "Create a new goal with all required details",
+    "description": "This test verifies that an employee can complete the goal creation form, satisfy validation rules, and submit a new goal for approval.",
+    "category": "Goal Creation Form",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /goals/create"
+      },
+      {
+        "type": "action",
+        "description": "Fill in a goal title"
+      },
+      {
+        "type": "action",
+        "description": "Select a thrust area"
+      },
+      {
+        "type": "action",
+        "description": "Select a unit of measure"
+      },
+      {
+        "type": "action",
+        "description": "Fill in a valid target value"
+      },
+      {
+        "type": "action",
+        "description": "Fill in a valid goal weight"
+      },
+      {
+        "type": "action",
+        "description": "Fill in success criteria details"
+      },
+      {
+        "type": "action",
+        "description": "Submit the form for approval"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a submission success confirmation is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new goal is available for review"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC002",
+    "title": "Submit a quarterly check-in update",
+    "description": "This test verifies that an employee can switch the period, enter progress data, choose a status, and submit the check-in update.",
+    "category": "Periodic Progress Updates",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /checkins"
+      },
+      {
+        "type": "action",
+        "description": "Toggle to a different quarter period"
+      },
+      {
+        "type": "action",
+        "description": "Enter a valid actual progress value"
+      },
+      {
+        "type": "action",
+        "description": "Choose a current track status"
+      },
+      {
+        "type": "action",
+        "description": "Submit the update"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the submitted update confirmation is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the check-in entry is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "Save a quarterly check-in draft",
+    "description": "This test verifies that an employee can switch the period, enter progress data, choose a status, and save the check-in as a draft.",
+    "category": "Periodic Progress Updates",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /checkins"
+      },
+      {
+        "type": "action",
+        "description": "Toggle to a different quarter period"
+      },
+      {
+        "type": "action",
+        "description": "Enter a valid actual progress value"
+      },
+      {
+        "type": "action",
+        "description": "Choose a current track status"
+      },
+      {
+        "type": "action",
+        "description": "Save the draft"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the saved draft confirmation is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the entered progress update is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "Review assigned goals and allocation balance",
+    "description": "This test verifies that an employee can open the goals sheet, review allocation balance indicators, and see assigned goals with their details.",
+    "category": "Goal Sheet Visualizer",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /goals"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the goals allocation summary section"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify allocation balance indicators are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify assigned goal cards are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "Approve submitted goals in a batch",
+    "description": "A manager can expand a team member’s accordion, select approvals, and complete the batch action for submitted goals.",
+    "category": "Manager Approvals Accordion",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /manager/approvals"
+      },
+      {
+        "type": "action",
+        "description": "Click an employee section to expand their submissions"
+      },
+      {
+        "type": "action",
+        "description": "Select the submitted goals to approve"
+      },
+      {
+        "type": "action",
+        "description": "Submit the approval action"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an approval confirmation is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the submission is no longer pending approval"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Review pending approvals and act on a team goal batch",
+    "description": "This test verifies that a manager can open approvals, review an employee goal accordion, and approve or return a submitted batch after checking the weight validity state.",
+    "category": "Manager Approval Console",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /manager/approvals"
+      },
+      {
+        "type": "action",
+        "description": "Expand an employee review accordion"
+      },
+      {
+        "type": "action",
+        "description": "Review the submitted goal sheet"
+      },
+      {
+        "type": "action",
+        "description": "Approve the batch or return it for changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an approval decision confirmation is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the review state updates in the approvals list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC007",
+    "title": "Review team submissions in an expanded accordion",
+    "description": "A manager can open a team member’s accordion on the approvals page and inspect the submitted goals and their weight details.",
+    "category": "Manager Approvals Accordion",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /manager/approvals"
+      },
+      {
+        "type": "action",
+        "description": "Click an employee section to expand their submissions"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the employee submission details are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify goal weight information is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC008",
+    "title": "Return submitted goals in a batch",
+    "description": "A manager can expand a team member’s accordion, select returns, and complete the batch action for submitted goals.",
+    "category": "Manager Approvals Accordion",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /manager/approvals"
+      },
+      {
+        "type": "action",
+        "description": "Click an employee section to expand their submissions"
+      },
+      {
+        "type": "action",
+        "description": "Select the submitted goals to return"
+      },
+      {
+        "type": "action",
+        "description": "Submit the return action"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a return confirmation is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the submission is marked as returned"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC009",
+    "title": "Inspect reporting summaries and export the CSV report",
+    "description": "This test verifies that a manager or admin can review the reports dashboard and export the CSV report.",
+    "category": "Reporting Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /reports"
+      },
+      {
+        "type": "action",
+        "description": "Review the reporting summary area"
+      },
+      {
+        "type": "action",
+        "description": "Inspect the report charts and tables"
+      },
+      {
+        "type": "action",
+        "description": "Export the CSV report"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify reporting summaries are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the CSV export action completes successfully"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC010",
+    "title": "Review reporting summaries and trends",
+    "description": "A user can open the reporting dashboard and inspect the summary metrics, charts, and table-based performance trends.",
+    "category": "Reporting Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /reports"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify reporting summary metrics are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify reporting trend charts and tables are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC011",
+    "title": "Confirm goal sheet shows valid allocation status",
+    "description": "This test verifies that an employee can review the overall allocation summary and see whether the sheet is valid.",
+    "category": "Goal Sheet Visualizer",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /goals"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the allocation summary is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the overall weightage status is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC012",
+    "title": "Export the reporting CSV",
+    "description": "A user can export the reporting data and receive the CSV export action from the dashboard.",
+    "category": "Reporting Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /reports"
+      },
+      {
+        "type": "action",
+        "description": "Export the report as CSV"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the CSV export action completes successfully"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a report export confirmation is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC013",
+    "title": "Block goal creation when required details are incomplete",
+    "description": "This test verifies that an employee cannot submit an incomplete goal form and receives validation feedback instead.",
+    "category": "Goal Creation Form",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /goals/create"
+      },
+      {
+        "type": "action",
+        "description": "Fill in a goal title"
+      },
+      {
+        "type": "action",
+        "description": "Select a thrust area"
+      },
+      {
+        "type": "action",
+        "description": "Submit the form for approval"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify required field validation feedback is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the form remains open for correction"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC014",
+    "title": "Block approval when total weight is invalid",
+    "description": "A manager sees that approval is unavailable when a team member’s submitted goal weights do not total correctly.",
+    "category": "Manager Approvals Accordion",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /manager/approvals"
+      },
+      {
+        "type": "action",
+        "description": "Click an employee section to expand their submissions"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify invalid weight information is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify approval is unavailable"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC015",
+    "title": "Expand a goal card to review details",
+    "description": "This test verifies that an employee can expand a goal card and view the detailed target information for that goal.",
+    "category": "Goal Sheet Visualizer",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /goals"
+      },
+      {
+        "type": "action",
+        "description": "Expand an assigned goal card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the goal details are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the goal target information is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC016",
+    "title": "View cycle completion status",
+    "description": "An admin can switch to the completion tracker tab and review cycle completion information.",
+    "category": "Admin Cycle Console",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/cycles"
+      },
+      {
+        "type": "action",
+        "description": "Click the Completion Tracker tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify cycle completion status is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the completion tracker panel is active"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC017",
+    "title": "View audit trail entries",
+    "description": "An admin can switch to the audit trail tab and review cycle audit log entries.",
+    "category": "Admin Cycle Console",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/cycles"
+      },
+      {
+        "type": "action",
+        "description": "Click the Audit Trail tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify audit trail entries are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the audit trail panel is active"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC018",
+    "title": "Block goal creation when weightage is below the minimum",
+    "description": "This test verifies that an employee sees validation feedback when a goal is given weightage below the allowed minimum.",
+    "category": "Goal Creation Form",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /goals/create"
+      },
+      {
+        "type": "action",
+        "description": "Fill in a goal title"
+      },
+      {
+        "type": "action",
+        "description": "Select a thrust area"
+      },
+      {
+        "type": "action",
+        "description": "Select a unit of measure"
+      },
+      {
+        "type": "action",
+        "description": "Fill in a valid target value"
+      },
+      {
+        "type": "action",
+        "description": "Fill in a weight below the minimum threshold"
+      },
+      {
+        "type": "action",
+        "description": "Submit the form for approval"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a weightage validation error is visible"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC019",
+    "title": "Review cycle audit trail and completion tracker",
+    "description": "This test verifies that an admin can switch between cycle oversight tabs and inspect cycle status and completion information.",
+    "category": "Cycle Oversight",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/cycles"
+      },
+      {
+        "type": "action",
+        "description": "Switch to the audit trail tab"
+      },
+      {
+        "type": "action",
+        "description": "Switch to the completion tracker tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify audit trail information is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify completion tracker information is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC020",
+    "title": "Switch between cycle tabs and see the active view update",
+    "description": "An admin can move between cycle tabs and see the visible panel change to match the selected tab.",
+    "category": "Admin Cycle Console",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/cycles"
+      },
+      {
+        "type": "action",
+        "description": "Click the Audit Trail tab"
+      },
+      {
+        "type": "action",
+        "description": "Click the Completion Tracker tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the completion tracker content is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the audit trail content is no longer active"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC021",
+    "title": "View zero-based progress calculation",
+    "description": "This test verifies that entering an actual value for a zero-based metric shows the calculated progress result.",
+    "category": "Periodic Progress Updates",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /checkins"
+      },
+      {
+        "type": "action",
+        "description": "Select a zero-based metric"
+      },
+      {
+        "type": "action",
+        "description": "Enter an actual value for the metric"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the calculated progress result is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the metric update remains visible"
+      }
+    ],
+    "priority": "Low"
+  }
+]
