@@ -23,6 +23,14 @@ GoalAlign is a premium, high-fidelity goal tracking and OKR alignment portal des
 
 ---
 
+## 🏗️ Technical Architecture & Diagrams
+
+A comprehensive architectural breakdown, including interactive database ERDs, component sequence schemas, and lifecycle flows, is fully mapped inside:
+
+👉 **[GoalAlign Architecture Documentation (ARCHITECTURE.md)](ARCHITECTURE.md)**
+
+---
+
 ## 🛠️ Tech Stack
 
 *   **Frontend & Routing:** [Next.js 15](https://nextjs.org/) (App Router, Server Components)
