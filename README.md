@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎯 GoalAlign — Atomberg Goal Alignment Portal
 
-## Getting Started
+GoalAlign is a premium, high-fidelity goal tracking and OKR alignment portal designed specifically for modern performance management. Developed as a solution for the Atomberg Hackathon, GoalAlign empowers employees to define, align, and track strategic goals while providing managers with a centralized dashboard to review achievements and maintain performance standards.
 
-First, run the development server:
+---
 
+## ✨ Features
+
+### 1. **Executive Dashboard & Real-Time Performance Metrics**
+*   **Dynamic Performance Metrics:** Instantly calculates progress completion rates, active goals, and pending approvals.
+*   **Precision Performance UI:** Styled with a premium, sleek dark-mode glassmorphic interface inspired by Atomberg's commitment to cutting-edge engineering.
+*   **Visual Charts & Micro-Animations:** Fluid state transitions, hover effects, and crisp status cards that keep users engaged.
+
+### 2. **Departmental Goal & OKR Alignment**
+*   **Strategic Thrust Area Integration:** Align individual goals directly with high-impact corporate thrust areas (e.g., Engineering Excellence, Product R&D, Operational Speed).
+*   **UOM & Measurable Targets:** Set quantitative targets with unique Units of Measurement (UOM) like percentage, units sold, or time-to-market.
+*   **Progress Indicators:** Live tracking from *Draft* to *Approved*, alongside granular progress stages (*Not Started*, *In Progress*, *Achieved*).
+
+### 3. **Secure Identity & Session Management**
+*   **NextAuth.js Authentication:** Complete session security using NextAuth Credentials Provider.
+*   **Manager-Employee Hierarchy:** Restricts views and metrics securely to the signed-in user and their department.
+*   **Audit Logging:** Full background tracing of edits, submissions, and approvals to ensure historical compliance.
+
+---
+
+## 🛠️ Tech Stack
+
+*   **Frontend & Routing:** [Next.js 15](https://nextjs.org/) (App Router, Server Components)
+*   **Styles & Theming:** Custom Vanilla CSS tailored for performance and responsive layout.
+*   **Database ORM:** [Prisma 7](https://www.prisma.io/) (Wasm/TypeScript Client Compiler)
+*   **Cloud Database:** [Neon Serverless PostgreSQL](https://neon.tech/)
+*   **Driver Adapter:** `@prisma/adapter-pg` + native `pg` client
+*   **Authentication:** [NextAuth.js v4](https://next-auth.js.org/)
+*   **Programming Language:** [TypeScript](https://www.typescriptlang.org/)
+
+---
+
+## 🔑 Demo Accounts for Judges
+
+To make reviewing the project seamless for the judges, copy-pasteable demo accounts are built directly into the login screen:
+
+| Role | Email | Password | Department |
+| :--- | :--- | :--- | :--- |
+| **Employee** | `arjun@company.com` | `password123` | Engineering |
+| **Manager** | `priya@company.com` | `password123` | Engineering |
+| **HR / Executive** | `neha@company.com` | `password123` | HR & Operations |
+
+---
+
+## 🚀 Local Installation & Setup
+
+If you want to run this application locally, follow these steps:
+
+### 1. Clone the repository and install dependencies
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Configure Environment Variables
+Create a `.env` file in the root directory and define the following variables:
+```env
+DATABASE_URL="postgresql://neondb_owner:npg_cVaLP8wC7vMG@ep-plain-cell-aqpiw5bz.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require"
+NEXTAUTH_SECRET="goalalign-super-secret-key-2026"
+NEXTAUTH_URL="http://localhost:3000"
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Generate the Prisma Client
+```bash
+npx prisma generate
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Seed the Database
+Populate your PostgreSQL database with the complete hackathon mock dataset:
+```bash
+node prisma/seed.js
+```
 
-## Learn More
+### 5. Fire up the Development Server
+```bash
+npm run dev
+```
+Open **[http://localhost:3000](http://localhost:3000)** in your browser!
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ☁️ Continuous Deployment to Vercel
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+GoalAlign is fully production-optimized and ready for Vercel deployment:
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Push your code to your GitHub Repository.
+2. Go to [Vercel](https://vercel.com/) and **Import** the repository.
+3. Add `DATABASE_URL` and `NEXTAUTH_SECRET` to the **Environment Variables** panel in Vercel.
+4. Click **Deploy**!
