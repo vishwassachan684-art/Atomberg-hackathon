@@ -83,11 +83,21 @@ Open **[http://localhost:3000](http://localhost:3000)** in your browser!
 
 ---
 
-## ☁️ Continuous Deployment to Vercel
+## ☁️ Production Deployment on Vercel
 
-GoalAlign is fully production-optimized and ready for Vercel deployment:
+GoalAlign is successfully deployed and running live in production on Vercel!
 
-1. Push your code to your GitHub Repository.
-2. Go to [Vercel](https://vercel.com/) and **Import** the repository.
-3. Add `DATABASE_URL` and `NEXTAUTH_SECRET` to the **Environment Variables** panel in Vercel.
-4. Click **Deploy**!
+### 🔗 Live Production URL
+👉 **[Atomberg GoalAlign Production Portal](https://atomberg-hackathon.vercel.app)** *(Deployed under the `Atomberg-hackathon` project)*
+
+### ⚙️ Production Build Configuration
+To handle our serverless cloud Neon PostgreSQL database mappings securely, the production container compiles using:
+*   **Build Command:** `prisma generate && next build` *(Configured inside `package.json` to automatically synthesize Prisma Wasm types on-the-fly)*
+*   **Output Directory:** Next.js default (`.next`)
+*   **Environment Variables Provisioned:**
+    *   `DATABASE_URL`: Live secure cloud pointer to the serverless Neon PostgreSQL cluster.
+    *   `NEXTAUTH_SECRET`: Cryptographic key for server-side NextAuth session encryption.
+    *   `NEXTAUTH_URL`: Set dynamically inside Vercel's routing mesh.
+
+### 🔄 CI/CD Automation Webhook
+The project is bound to your GitHub repository. Any future commits pushed to the `main` branch will automatically trigger incremental production builds and zero-downtime hot-swaps on Vercel!
