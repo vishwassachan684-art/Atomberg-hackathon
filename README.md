@@ -88,7 +88,7 @@ Open **[http://localhost:3000](http://localhost:3000)** in your browser!
 GoalAlign is successfully deployed and running live in production on Vercel!
 
 ### 🔗 Live Production URL
-👉 **[Atomberg GoalAlign Production Portal](https://atomberg-hackathon.vercel.app)** *(Deployed under the `Atomberg-hackathon` project)*
+👉 **[Atomberg GoalAlign Production Portal](https://atomberg-hackathon-vo5y08ai0-vishwassachan684-arts-projects.vercel.app)**
 
 ### ⚙️ Production Build Configuration
 To handle our serverless cloud Neon PostgreSQL database mappings securely, the production container compiles using:
