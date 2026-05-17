@@ -289,7 +289,7 @@ export async function getAuditLogs(): Promise<any[]> {
         goal: true,
       },
     });
-    return dbLogs.map(log => ({
+    return dbLogs.map((log: any) => ({
       id: log.id,
       goalId: log.goalId || undefined,
       userId: log.userId,
